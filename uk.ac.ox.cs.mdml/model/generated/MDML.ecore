@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="mDML" nsURI="http://www.ac.uk/ox/cs/MDML" nsPrefix="mDML">
+  <eClassifiers xsi:type="ecore:EClass" name="DomainRegistry">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="registeredItems" upperBound="-1"
+        eType="#//DataModel" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="DataModel" eSuperTypes="#//RelationSource #//RelationDestination">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="status" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="guid" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="refines" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="elements" upperBound="-1"
+        eType="#//DataItem" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="relations" upperBound="-1"
+        eType="#//Relationship" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="constraint" upperBound="-1"
+        eType="#//Constraint" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="predicate" upperBound="-1"
+        eType="#//Predicate" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="DataItem">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="dataitem" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Reference" eSuperTypes="#//ContainerElement">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="type" eType="#//DataItem"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="RelationSource"/>
+  <eClassifiers xsi:type="ecore:EClass" name="RelationDestination"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Relationship">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="src" eType="#//RelationSource"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="dest" eType="#//RelationDestination"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ExtensionItem">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="key" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Import">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="importedNamespace" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="DataType" eSuperTypes="#//RelationSource #//RelationDestination">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="status" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="guid" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="refines" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="EnumeratedType" eSuperTypes="#//DataType">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="type" eType="#//PrimitiveType"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="array" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="length" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ReferenceType" eSuperTypes="#//DataType">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="type" eType="#//DataClass"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="PrimitiveType" eSuperTypes="#//DataType">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="type" eType="#//Basic"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="rule" eType="#//Constraint"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Basic">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="typename" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ContainerElement">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="DataClass" eSuperTypes="#//RelationSource #//RelationDestination #//ContainerElement">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="status" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="guid" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="refines" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="dataelements" upperBound="-1"
+        eType="#//ContainerElement" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="extension" upperBound="-1"
+        eType="#//ExtensionItem" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="DataElement" eSuperTypes="#//RelationSource #//RelationDestination #//ContainerElement">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="status" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="guid" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="refines" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="type" eType="#//DataType"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Constraint">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="src" eType="#//DataElement"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="pred" eType="#//Predicate"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="dest" eType="#//DataElement"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Predicate">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="predicate" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+</ecore:EPackage>

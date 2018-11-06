@@ -1,0 +1,134 @@
+grammar uk.ac.ox.cs.MDML with org.eclipse.xtext.common.Terminals
+
+generate mDML "http://www.ac.uk/ox/cs/MDML"
+
+DomainRegistry :
+	(registeredItems += DataModel)*
+;
+
+DataModel:
+	'DataModel' name = QualifiedName 'status:' status = Status 'domainid:' guid = GUID  '@' '(' Version ')' refines=(REFINE) '{'
+	(elements += DataItem)*
+	(relations += Relationship)*
+	(constraint += Constraint)*
+	(predicate += Predicate)*
+	'}'
+;
+
+DataItem:
+	dataitem = (DataModel | DataClass | DataElement | DataType | Import | ExtensionItem  )
+;
+
+REFINE:
+	 (REFINES | DOESNOTREFINE)?
+;
+
+REFINES:
+	'refines' ':' Path
+;
+
+DOESNOTREFINE:
+	'doesnotrefine' ':' Path
+;
+
+
+QualifiedName:
+		ID('.' ID)*
+;
+
+Path:
+	QualifiedName('/' QualifiedName)* 
+;
+
+GUID:
+		ID(('.' ID)|('/' ID))*
+;
+Version:
+		INT '.' INT '.' INT
+;
+
+Reference:
+	"ref" name=ID ":" type=[DataItem]
+;
+
+RelationSource:
+	DataModel | DataClass | DataElement | DataType 
+;
+
+RelationDestination:
+	DataModel | DataClass | DataElement | DataType
+;
+
+Relationship:
+	'relationship' (src = RelationSource ':' dest = RelationDestination)
+;
+
+ExtensionItem:
+	'extension' key = ID '=' value = STRING';'
+;
+
+Import:
+	'import' importedNamespace = QualifiedNameWithWildcard
+;
+
+QualifiedNameWithWildcard:
+	QualifiedName '.*'?
+;
+
+DataType:
+	 PrimitiveType |  ReferenceType | EnumeratedType
+;
+
+EnumeratedType:
+	'enumtype' 'status:' status = Status 'domainid:' guid = GUID  '@' '(' Version ')' 
+	 refines=(REFINE) name = QualifiedName ':' type=PrimitiveType(array ?='[' (length=INT)? ']')?
+;
+ 
+ReferenceType:  
+	'reftype' 'status:' status = Status 'domainid:' guid = GUID  '@' '(' Version ')' 
+	refines=(REFINE) name = QualifiedName ':' type=[DataClass]
+;
+
+PrimitiveType:  
+	{PrimitiveType} ('datatype' 'status:' status = Status 'domainid:' guid = GUID  '@' '(' Version ')' 
+		refines=(REFINE) name = QualifiedName ':' type=Basic (rule=[Constraint])?
+	)
+;
+
+Basic:
+	typename=('STRING'|'INT'|'BOOLEAN')
+;
+
+BOOLEAN:
+	('0'|'1')
+;
+ContainerElement:
+	DataClass| DataElement | Reference
+;
+
+DataClass:
+	'DataClass' 'status:' status = Status 'domainid:' guid = GUID'@' '(' Version ')' 
+	refines=(REFINE) name = QualifiedName  '{'
+	  (dataelements += ContainerElement)*
+	  (extension += ExtensionItem)*
+	  '}'
+;
+
+DataElement:
+	'DataElement' 'status:' status = Status 'domainid:' guid = GUID  '@' '(' Version ')' 
+	refines=(REFINE) name = QualifiedName ':' type = [DataType|QualifiedName]
+;
+
+Status:
+	('draft'|'finalized'|'superceded')
+; 
+
+Constraint:
+	{Constraint} 'constraint' name = QualifiedName '=' (( src = DataElement ':')? 
+		pred = [Predicate]  (':' dest = DataElement)?
+	)
+;
+
+Predicate:
+	'predicate' name = QualifiedName ':' predicate = STRING
+;

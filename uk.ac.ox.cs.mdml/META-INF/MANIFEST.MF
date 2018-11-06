@@ -1,0 +1,29 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: uk.ac.ox.cs.mdml
+Bundle-Vendor: My Company
+Bundle-Version: 1.0.0.qualifier
+Bundle-SymbolicName: uk.ac.ox.cs.mdml; singleton:=true
+Bundle-ActivationPolicy: lazy
+Require-Bundle: org.eclipse.xtext,
+ org.eclipse.xtext.xbase,
+ org.eclipse.equinox.common;bundle-version="3.5.0",
+ org.eclipse.emf.ecore,
+ org.eclipse.xtext.xbase.lib,
+ org.antlr.runtime,
+ org.eclipse.xtext.util,
+ org.eclipse.xtend.lib,
+ org.eclipse.emf.common
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Export-Package: uk.ac.ox.cs,
+ uk.ac.ox.cs.mDML.impl,
+ uk.ac.ox.cs.parser.antlr.internal,
+ uk.ac.ox.cs.services,
+ uk.ac.ox.cs.parser.antlr,
+ uk.ac.ox.cs.scoping,
+ uk.ac.ox.cs.validation,
+ uk.ac.ox.cs.mDML.util,
+ uk.ac.ox.cs.mDML,
+ uk.ac.ox.cs.generator,
+ uk.ac.ox.cs.serializer
+Import-Package: org.apache.log4j
