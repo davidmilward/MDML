@@ -3,32 +3,50 @@ grammar uk.ac.ox.cs.MDML with org.eclipse.xtext.common.Terminals
 generate mDML "http://www.ac.uk/ox/cs/MDML"
 
 DomainRegistry :
-	(registeredItems += DataModel)*
+	{DomainRegistry} (registeredItems += Model)*
 ;
 
+Model:
+	model = (ConceptModel|DataModel)
+;
+
+Concept:
+	'Concept' name = QualifiedName 'status:' status = Status 'domainid:' guid = GUID'@' '(' Version ')'  ('extends' superType=[Concept])? '{'
+	  (descriptors += Term)*
+	  (relations += Reference)*
+	 '}'
+;
+
+
+Term:
+	'Term' 'status:' status = Status 'domainid:' guid = GUID  '@' '(' Version ')' 
+	name = QualifiedName 
+;
+
+
+ConceptModel:
+	'ConceptModel' name = Path 'status:' status = Status 'domainid:' guid = GUID  '@' '(' Version ')' '{'
+	(concepts += Concept)*
+	(relations += Relationship)*
+	(constraint += Constraint)*
+	(predicate += Predicate)*
+	(metadata += MetadataItem)*
+	'}'
+;
+
+
 DataModel:
-	'DataModel' name = QualifiedName 'status:' status = Status 'domainid:' guid = GUID  '@' '(' Version ')' refines=(REFINE) '{'
+	'DataModel' name = Path 'status:' status = Status 'domainid:' guid = GUID  '@' '(' Version ')' '{'
 	(elements += DataItem)*
 	(relations += Relationship)*
 	(constraint += Constraint)*
 	(predicate += Predicate)*
+	(metadata += MetadataItem)*
 	'}'
 ;
 
 DataItem:
-	dataitem = (DataModel | DataClass | DataElement | DataType | Import | ExtensionItem  )
-;
-
-REFINE:
-	 (REFINES | DOESNOTREFINE)?
-;
-
-REFINES:
-	'refines' ':' Path
-;
-
-DOESNOTREFINE:
-	'doesnotrefine' ':' Path
+	dataitem = (Concept | Term | Model | ContainerElement | DataType | Import  )
 ;
 
 
@@ -52,19 +70,27 @@ Reference:
 ;
 
 RelationSource:
-	DataModel | DataClass | DataElement | DataType 
+	DataModel | ContainerElement | DataType 
 ;
 
 RelationDestination:
-	DataModel | DataClass | DataElement | DataType
+	DataModel | ContainerElement | DataType
 ;
 
 Relationship:
 	'relationship' (src = RelationSource ':' dest = RelationDestination)
 ;
 
-ExtensionItem:
-	'extension' key = ID '=' value = STRING';'
+MetadataItem:
+	'metadata' key = MetadataRef '=' value = MetadataValue ';'
+;
+
+MetadataRef:
+	"key" name=ID
+;
+
+MetadataValue:
+	"value" name=STRING
 ;
 
 Import:
@@ -81,46 +107,47 @@ DataType:
 
 EnumeratedType:
 	'enumtype' 'status:' status = Status 'domainid:' guid = GUID  '@' '(' Version ')' 
-	 refines=(REFINE) name = QualifiedName ':' type=PrimitiveType(array ?='[' (length=INT)? ']')?
+	 name = QualifiedName ':' type=PrimitiveType(array ?='[' (length=INT)? ']')?
 ;
  
 ReferenceType:  
 	'reftype' 'status:' status = Status 'domainid:' guid = GUID  '@' '(' Version ')' 
-	refines=(REFINE) name = QualifiedName ':' type=[DataClass]
+	 name = QualifiedName ':' type=[DataClass]
 ;
 
 PrimitiveType:  
 	{PrimitiveType} ('datatype' 'status:' status = Status 'domainid:' guid = GUID  '@' '(' Version ')' 
-		refines=(REFINE) name = QualifiedName ':' type=Basic (rule=[Constraint])?
+		 name = QualifiedName ':' type=BasicType (rule=[Constraint])?
 	)
 ;
 
-Basic:
-	typename=('STRING'|'INT'|'BOOLEAN')
+BasicType:
+	typename=('STRING' | 'INT' | BOOLEAN)
 ;
 
 BOOLEAN:
 	('0'|'1')
 ;
+
 ContainerElement:
-	DataClass| DataElement | Reference
+	DataClass| DataElement 
 ;
 
 DataClass:
-	'DataClass' 'status:' status = Status 'domainid:' guid = GUID'@' '(' Version ')' 
-	refines=(REFINE) name = QualifiedName  '{'
+	'DataClass' name = QualifiedName 'status:' status = Status 'domainid:' guid = GUID'@' '(' Version ')' 
+	 ('extends' superType=[DataClass])?  '{'
 	  (dataelements += ContainerElement)*
-	  (extension += ExtensionItem)*
+	  (relations += Reference)*
 	  '}'
 ;
 
 DataElement:
 	'DataElement' 'status:' status = Status 'domainid:' guid = GUID  '@' '(' Version ')' 
-	refines=(REFINE) name = QualifiedName ':' type = [DataType|QualifiedName]
+	name = QualifiedName ':' type = [DataType|QualifiedName]
 ;
 
 Status:
-	('draft'|'finalized'|'superceded')
+	('draft'|'finalised'|'superceded')
 ; 
 
 Constraint:
@@ -132,3 +159,4 @@ Constraint:
 Predicate:
 	'predicate' name = QualifiedName ':' predicate = STRING
 ;
+	

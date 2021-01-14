@@ -1,0 +1,5 @@
+*.class
+*.*bin
+*.bin
+.DS_Store
+.xml_gen
